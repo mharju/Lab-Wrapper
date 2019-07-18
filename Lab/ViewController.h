@@ -7,9 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <WebKit/WebKit.h>
 
-@interface ViewController : NSViewController
+@interface ViewController : NSViewController <WKUIDelegate, WKNavigationDelegate>
 
-
+@property (weak) IBOutlet WKWebView *webView;
+@property (strong, nonatomic) NSTask *task;
 @end
 

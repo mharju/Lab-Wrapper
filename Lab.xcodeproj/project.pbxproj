@@ -12,6 +12,8 @@
 		13672D3F22E02B7A00C30B1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13672D3E22E02B7A00C30B1E /* Assets.xcassets */; };
 		13672D4222E02B7B00C30B1E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13672D4022E02B7B00C30B1E /* Main.storyboard */; };
 		13672D4522E02B7B00C30B1E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13672D4422E02B7B00C30B1E /* main.m */; };
+		13672D4E22E02CA600C30B1E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13672D4D22E02CA600C30B1E /* WebKit.framework */; };
+		13672D5122E0460600C30B1E /* MoveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13672D5022E0460600C30B1E /* MoveView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,9 @@
 		13672D4322E02B7B00C30B1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		13672D4422E02B7B00C30B1E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		13672D4622E02B7B00C30B1E /* Lab.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Lab.entitlements; sourceTree = "<group>"; };
+		13672D4D22E02CA600C30B1E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		13672D4F22E0460600C30B1E /* MoveView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MoveView.h; sourceTree = "<group>"; };
+		13672D5022E0460600C30B1E /* MoveView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoveView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13672D4E22E02CA600C30B1E /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +49,7 @@
 			children = (
 				13672D3722E02B7A00C30B1E /* Lab */,
 				13672D3622E02B7A00C30B1E /* Products */,
+				13672D4C22E02CA600C30B1E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,8 +73,18 @@
 				13672D4322E02B7B00C30B1E /* Info.plist */,
 				13672D4422E02B7B00C30B1E /* main.m */,
 				13672D4622E02B7B00C30B1E /* Lab.entitlements */,
+				13672D4F22E0460600C30B1E /* MoveView.h */,
+				13672D5022E0460600C30B1E /* MoveView.m */,
 			);
 			path = Lab;
+			sourceTree = "<group>";
+		};
+		13672D4C22E02CA600C30B1E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				13672D4D22E02CA600C30B1E /* WebKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -101,6 +118,11 @@
 				TargetAttributes = {
 					13672D3422E02B7A00C30B1E = {
 						CreatedOnToolsVersion = 10.2.1;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -142,6 +164,7 @@
 				13672D3D22E02B7A00C30B1E /* ViewController.m in Sources */,
 				13672D4522E02B7B00C30B1E /* main.m in Sources */,
 				13672D3A22E02B7A00C30B1E /* AppDelegate.m in Sources */,
+				13672D5122E0460600C30B1E /* MoveView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
