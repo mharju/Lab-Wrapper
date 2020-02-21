@@ -49,6 +49,23 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Edit" id="exK-Ct-KHh">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Edit" systemMenu="apple" id="r8X-A4-9qb">
+                                    <items>
+                                        <menuItem title="Copy" keyEquivalent="c" id="qSM-df-xZt">
+                                            <connections>
+                                                <action selector="copy:" target="Ady-hI-5gd" id="bgt-Wi-bav"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Paste" keyEquivalent="v" id="hqy-0F-KIf">
+                                            <connections>
+                                                <action selector="paste:" target="Ady-hI-5gd" id="J1M-YW-1GJ"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Window" id="aUF-d1-5bR">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
