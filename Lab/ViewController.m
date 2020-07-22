@@ -18,27 +18,23 @@ static int is_websocket(const struct mg_connection *nc) {
   return nc->flags & MG_F_IS_WEBSOCKET;
 }
 
-static void broadcast(struct mg_connection *nc, const struct mg_str msg) {
-  struct mg_connection *c;
-    
-  for (c = mg_next(nc->mgr, NULL); c != NULL; c = mg_next(nc->mgr, c)) {
-      if (c != NULL) {
-          mg_send_websocket_frame(c, WEBSOCKET_OP_TEXT, msg.p, msg.len);
-      }
-  }
+static void send_to_primary(struct mg_connection *nc, const struct mg_str msg) {
 }
 
 static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
     @autoreleasepool {
     switch (ev) {
       case MG_EV_WEBSOCKET_HANDSHAKE_DONE: {
-        ws_connection = nc;
+        if(ws_connection == NULL) {
+          NSLog(@"Primary connect");
+          ws_connection = nc;
+        }
         break;
       }
       case MG_EV_WEBSOCKET_FRAME: {
         struct websocket_message *wm = (struct websocket_message *) ev_data;
         struct mg_str d = {(char *) wm->data, wm->size};
-        [(__bridge DataConnection*)nc->mgr->user_data setResponseForEvaluation:d.p length:d.len];
+        mg_send_websocket_frame(ws_connection, WEBSOCKET_OP_TEXT, d.p, d.len);
         break;
       }
       case MG_EV_HTTP_REQUEST: {
@@ -46,7 +42,8 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
         break;
       }
       case MG_EV_CLOSE: {
-        if (is_websocket(nc)) {
+        if (is_websocket(nc) && nc == ws_connection) {
+          NSLog(@"Primary disconnect");
           ws_connection = NULL;
         }
         break;
@@ -125,8 +122,8 @@ static void *start_server(void *nrepl) {
     completionHandler();
 }
 
-- (void) sendBroadcast:(DataConnection *)repl forEvaluation:(const uint8_t *)data {
-    NSLog(@"Broadcast %s", data);
-    broadcast(ws_connection, mg_mk_str(data));
+- (void) sendBroadcast:(DataConnection *)repl forData:(const char *)data {
+    struct mg_str d = mg_mk_str(data);
+    mg_send_websocket_frame(ws_connection, WEBSOCKET_OP_TEXT, d.p, d.len);
 }
 @end

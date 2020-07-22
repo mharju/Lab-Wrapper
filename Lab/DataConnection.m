@@ -1,5 +1,5 @@
 //
-//  NRepl.m
+//  DataConnection.m
 //  Lab
 //
 //  Created by Mikko Harju on 07/06/2020.
@@ -20,7 +20,7 @@ static const uint16 TCP_LISTEN_PORT = 9889;
     NSInputStream *inputStream;
     NSOutputStream *outputStream;
 }
-@property (strong, nonatomic) id<NReplDelegate> delegate;
+@property (strong, nonatomic) id<DataConnectionDelegate> delegate;
 - (void) pairStreams:(CFSocketNativeHandle)handle;
 @end
 
@@ -37,7 +37,7 @@ static void handleConnect(CFSocketRef s,
 }
 
 @implementation DataConnection
-- (instancetype) initWithDelegate:(id<NReplDelegate>)delegate {
+- (instancetype) initWithDelegate:(id<DataConnectionDelegate>)delegate {
     if (self = [super init]) {
         self.delegate = delegate;
     }
@@ -91,8 +91,8 @@ static void handleConnect(CFSocketRef s,
 
     inputStream = (__bridge_transfer NSInputStream *)readStream;
     outputStream = (__bridge_transfer NSOutputStream *)writeStream;
-    [inputStream setProperty:(id)kCFBooleanTrue forKey:kCFStreamPropertyShouldCloseNativeSocket];
-    [outputStream setProperty:(id)kCFBooleanTrue forKey:kCFStreamPropertyShouldCloseNativeSocket];
+    [inputStream setProperty:(id)kCFBooleanTrue forKey:(NSString*)kCFStreamPropertyShouldCloseNativeSocket];
+    [outputStream setProperty:(id)kCFBooleanTrue forKey:(NSString*)kCFStreamPropertyShouldCloseNativeSocket];
     [inputStream setDelegate:self];
     [outputStream setDelegate:self];
     [inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -121,12 +121,12 @@ static void handleConnect(CFSocketRef s,
             NSLog(@"Client connected.");
             break;
         case NSStreamEventHasBytesAvailable: {
-            uint8_t buf[1024] = {0};
+            char buf[1024] = {0};
             NSInteger len = 0;
-            if((len = [inputStream read:&buf[0] maxLength:1024]) > 0) {
+            if((len = [inputStream read:(uint8_t*)&buf[0] maxLength:1024]) > 0) {
                 buf[len] = '\0';
                 NSLog(@"Data received. Broadcasting.");
-                [[self delegate] sendBroadcast:self forEvaluation:&buf[0]];
+                [[self delegate] sendBroadcast:self forData:&buf[0]];
             }
             break;
         }
@@ -147,7 +147,7 @@ static void handleConnect(CFSocketRef s,
     }
 }
 
-- (void) setResponseForEvaluation:(const uint8_t *)result length:(int)length {
-    [outputStream write:result maxLength:length];
+- (void) sendResponseForData:(const char *)result length:(size_t)length {
+    [outputStream write:(uint8_t*)result maxLength:length];
 }
 @end

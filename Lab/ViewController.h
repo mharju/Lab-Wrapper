@@ -10,7 +10,7 @@
 #import <WebKit/WebKit.h>
 #import "DataConnection.h"
 
-@interface ViewController : NSViewController <WKUIDelegate, WKNavigationDelegate, NReplDelegate>
+@interface ViewController : NSViewController <WKUIDelegate, WKNavigationDelegate, DataConnectionDelegate>
 
 @property (weak) IBOutlet WKWebView *webView;
 @property (strong, nonatomic) NSTask *task;

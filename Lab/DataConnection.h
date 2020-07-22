@@ -1,5 +1,5 @@
 //
-//  NRepl.h
+//  DataConnection.h
 //  Lab
 //
 //  Created by Mikko Harju on 07/06/2020.
@@ -12,15 +12,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol NReplDelegate <NSObject>
+@protocol DataConnectionDelegate <NSObject>
 @optional
-- (void) sendBroadcast:(DataConnection*)repl forEvaluation:(const uint8_t*)data;
+- (void) sendBroadcast:(DataConnection*)repl forData:(const char*)data;
 @end
 
 @interface DataConnection : NSObject <NSStreamDelegate>
-- (instancetype) initWithDelegate:(id<NReplDelegate>)delegate;
+- (instancetype) initWithDelegate:(id<DataConnectionDelegate>)delegate;
 - (void) start;
-- (void) setResponseForEvaluation:(const uint8_t*)result length:(int)length;
+- (void) sendResponseForData:(const char*)result length:(size_t)length;
 @end
 
 NS_ASSUME_NONNULL_END
