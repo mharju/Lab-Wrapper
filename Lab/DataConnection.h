@@ -8,19 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-@class NRepl;
+@class DataConnection;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol NReplDelegate <NSObject>
 @optional
-- sendBroadcast:(NRepl*)repl forEvaluation:(NSString*)data;
+- (void) sendBroadcast:(DataConnection*)repl forEvaluation:(const uint8_t*)data;
 @end
 
-@interface NRepl : NSObject <NSStreamDelegate>
+@interface DataConnection : NSObject <NSStreamDelegate>
 - (instancetype) initWithDelegate:(id<NReplDelegate>)delegate;
 - (void) start;
-- setResponseForEvaluation:(NSString*)result;
+- (void) setResponseForEvaluation:(const uint8_t*)result length:(int)length;
 @end
 
 NS_ASSUME_NONNULL_END

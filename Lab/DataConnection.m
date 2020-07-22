@@ -11,13 +11,12 @@
 #include <netinet/in.h>
 #include <ifaddrs.h>
 #include <arpa/inet.h>
-#include "bencode.h"
 
-#import "NRepl.h"
+#import "DataConnection.h"
 
-static const uint16 NREPL_LISTEN_PORT = 9897;
+static const uint16 TCP_LISTEN_PORT = 9889;
 
-@interface NRepl () {
+@interface DataConnection () {
     NSInputStream *inputStream;
     NSOutputStream *outputStream;
 }
@@ -30,14 +29,14 @@ static void handleConnect(CFSocketRef s,
                           CFDataRef address,
                           const void *data,
                           void *info) {
-    NRepl* delegate = (__bridge NRepl*)info;
+    DataConnection* delegate = (__bridge DataConnection*)info;
     if(callbackType == kCFSocketAcceptCallBack) {
         NSLog(@"Pair streams.");
         [delegate pairStreams:(CFSocketNativeHandle)*(const int*)data];
     }
 }
 
-@implementation NRepl
+@implementation DataConnection
 - (instancetype) initWithDelegate:(id<NReplDelegate>)delegate {
     if (self = [super init]) {
         self.delegate = delegate;
@@ -61,7 +60,7 @@ static void handleConnect(CFSocketRef s,
       memset(&sin, 0, sizeof(sin));
       sin.sin_len = sizeof(sin);
       sin.sin_family = AF_INET; /* Address family */
-      sin.sin_port = htons(NREPL_LISTEN_PORT); /* Or a specific port */
+      sin.sin_port = htons(TCP_LISTEN_PORT); /* Or a specific port */
       sin.sin_addr.s_addr = INADDR_ANY;
       
       CFDataRef sincfd = CFDataCreate(
@@ -81,7 +80,7 @@ static void handleConnect(CFSocketRef s,
                          socketsource,
                          kCFRunLoopDefaultMode);
           
-       NSLog(@"Started NREPL server at nrepl://localhost:%d\n", NREPL_LISTEN_PORT);
+       NSLog(@"Started data service at tcp://localhost:%u\n", TCP_LISTEN_PORT);
 }
 
 - (void) pairStreams:(CFSocketNativeHandle)handle
@@ -126,41 +125,12 @@ static void handleConnect(CFSocketRef s,
             NSInteger len = 0;
             if((len = [inputStream read:&buf[0] maxLength:1024]) > 0) {
                 buf[len] = '\0';
-                
-                struct bencode bc = {0};
-                bencode_init(&bc, buf, len);
-                int token = -1;
-                do {
-                    token = bencode_next(&bc);
-                    switch(token) {
-                        case BENCODE_STRING: {
-                            char b[1024] = {0};
-                            strncpy(b, bc.tok, bc.toklen);
-                            NSLog(@"String. %s", b);
-                            break;
-                        }
-                        case BENCODE_INTEGER:
-                            NSLog(@"Integer. %d", (int)bc.tok);
-                            break;
-                        case BENCODE_DICT_BEGIN:
-                            NSLog(@"Dict begin");
-                            break;
-                        case BENCODE_DICT_END:
-                            NSLog(@"Dict end");
-                            break;
-                    }
-                } while(token != BENCODE_DONE);
-                NSLog(@"Parsing done.");
-                // Example: d3:cow3:moo4:spam4:eggse represents the dictionary { "cow" => "moo", "spam" => "eggs" }
-                //
-                // l5:close9:classpath8:describe4:evale
-                const uint8_t response[] = "d3:opsl5:close9:classpath8:describe4:evalee\n";
-                [outputStream write:&response[0] maxLength:44];
+                NSLog(@"Data received. Broadcasting.");
+                [[self delegate] sendBroadcast:self forEvaluation:&buf[0]];
             }
             break;
         }
         case NSStreamEventHasSpaceAvailable: {
-            NSLog(@"Has space available.");
             break;
         }
         case NSStreamEventEndEncountered:
@@ -175,5 +145,9 @@ static void handleConnect(CFSocketRef s,
         default:
             NSLog(@"Unknown %ld", eventCode);
     }
+}
+
+- (void) setResponseForEvaluation:(const uint8_t *)result length:(int)length {
+    [outputStream write:result maxLength:length];
 }
 @end

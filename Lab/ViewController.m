@@ -9,10 +9,10 @@
 #import "ViewController.h"
 #include <pthread.h>
 #include "mongoose.h"
-#import "NRepl.h"
 
 static const char* LISTEN_PORT = "9898";
 static struct mg_serve_http_opts s_http_server_opts;
+static struct mg_connection *ws_connection = NULL;
 
 static int is_websocket(const struct mg_connection *nc) {
   return nc->flags & MG_F_IS_WEBSOCKET;
@@ -20,16 +20,11 @@ static int is_websocket(const struct mg_connection *nc) {
 
 static void broadcast(struct mg_connection *nc, const struct mg_str msg) {
   struct mg_connection *c;
-  char buf[500];
-  char addr[32];
-  mg_sock_addr_to_str(&nc->sa, addr, sizeof(addr),
-                      MG_SOCK_STRINGIFY_IP | MG_SOCK_STRINGIFY_PORT);
-
-  snprintf(buf, sizeof(buf), "%s %.*s", addr, (int) msg.len, msg.p);
-  printf("%s\n", buf); /* Local echo. */
+    
   for (c = mg_next(nc->mgr, NULL); c != NULL; c = mg_next(nc->mgr, c)) {
-    if (c == nc) continue; /* Don't send to the sender. */
-    mg_send_websocket_frame(c, WEBSOCKET_OP_TEXT, buf, strlen(buf));
+      if (c != NULL) {
+          mg_send_websocket_frame(c, WEBSOCKET_OP_TEXT, msg.p, msg.len);
+      }
   }
 }
 
@@ -37,15 +32,13 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
     @autoreleasepool {
     switch (ev) {
       case MG_EV_WEBSOCKET_HANDSHAKE_DONE: {
-        /* New websocket connection. Tell everybody. */
-        broadcast(nc, mg_mk_str("++ connected"));
+        ws_connection = nc;
         break;
       }
       case MG_EV_WEBSOCKET_FRAME: {
         struct websocket_message *wm = (struct websocket_message *) ev_data;
-        /* New websocket message. Tell everybody. */
         struct mg_str d = {(char *) wm->data, wm->size};
-        broadcast(nc, d);
+        [(__bridge DataConnection*)nc->mgr->user_data setResponseForEvaluation:d.p length:d.len];
         break;
       }
       case MG_EV_HTTP_REQUEST: {
@@ -53,9 +46,8 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
         break;
       }
       case MG_EV_CLOSE: {
-        /* Disconnect. Tell everybody. */
         if (is_websocket(nc)) {
-          broadcast(nc, mg_mk_str("-- left"));
+          ws_connection = NULL;
         }
         break;
       }
@@ -63,11 +55,11 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
     }
 }
 
-static void *start_server() {
+static void *start_server(void *nrepl) {
     struct mg_mgr mgr;
     struct mg_connection *nc;
 
-    mg_mgr_init(&mgr, NULL);
+    mg_mgr_init(&mgr, nrepl);
     NSLog(@"Starting web server on port %s\n", LISTEN_PORT);
     nc = mg_bind(&mgr, LISTEN_PORT, ev_handler);
     
@@ -84,7 +76,7 @@ static void *start_server() {
 
 @interface ViewController () {
     pthread_t http_server;
-    NRepl *nrepl;
+    DataConnection *nrepl;
 }
 @end
 
@@ -92,11 +84,12 @@ static void *start_server() {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    pthread_create(&http_server, NULL, start_server, NULL);
 
-    nrepl = [[NRepl alloc] init];
+    nrepl = [[DataConnection alloc] initWithDelegate:self];
     [nrepl start];
-    
+
+    pthread_create(&http_server, NULL, start_server, (__bridge void*)nrepl);
+
     NSURLRequest *req = [NSURLRequest requestWithURL:
                          [NSURL URLWithString:
                           [NSString stringWithFormat:@"http://localhost:%s", LISTEN_PORT]]];
@@ -130,5 +123,10 @@ static void *start_server() {
 {
     NSLog(@"%@", message);
     completionHandler();
+}
+
+- (void) sendBroadcast:(DataConnection *)repl forEvaluation:(const uint8_t *)data {
+    NSLog(@"Broadcast %s", data);
+    broadcast(ws_connection, mg_mk_str(data));
 }
 @end
