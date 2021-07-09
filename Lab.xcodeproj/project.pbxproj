@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1335E8AC26221FFB004CEAE6 /* postgres.c in Sources */ = {isa = PBXBuildFile; fileRef = 1335E8AB26221FFB004CEAE6 /* postgres.c */; };
+		1335E8B126222119004CEAE6 /* libpq.5.13.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1335E8B026222119004CEAE6 /* libpq.5.13.dylib */; };
+		1335E8B62622CAD5004CEAE6 /* bencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 1335E8B52622CAD5004CEAE6 /* bencode.c */; };
 		135305ED248C096100AA08EB /* public in Resources */ = {isa = PBXBuildFile; fileRef = 135305EC248C096100AA08EB /* public */; };
 		135305F3248D378300AA08EB /* DataConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 135305F2248D378300AA08EB /* DataConnection.m */; };
 		13672D3A22E02B7A00C30B1E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13672D3922E02B7A00C30B1E /* AppDelegate.m */; };
@@ -20,6 +23,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1335E8A626221FAD004CEAE6 /* libpq.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpq.5.dylib; path = ../../../../../usr/local/lib/libpq.5.dylib; sourceTree = "<group>"; };
+		1335E8AA26221FFB004CEAE6 /* postgres.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = postgres.h; sourceTree = "<group>"; };
+		1335E8AB26221FFB004CEAE6 /* postgres.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = postgres.c; sourceTree = "<group>"; };
+		1335E8B026222119004CEAE6 /* libpq.5.13.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpq.5.13.dylib; path = ../../../../../usr/local/Cellar/libpq/13.2/lib/libpq.5.13.dylib; sourceTree = "<group>"; };
+		1335E8B52622CAD5004CEAE6 /* bencode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bencode.c; sourceTree = "<group>"; };
+		1335E8B82622CAF6004CEAE6 /* bencode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bencode.h; sourceTree = "<group>"; };
 		135305EC248C096100AA08EB /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		135305F1248D378300AA08EB /* DataConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataConnection.h; sourceTree = "<group>"; };
 		135305F2248D378300AA08EB /* DataConnection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataConnection.m; sourceTree = "<group>"; };
@@ -45,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1335E8B126222119004CEAE6 /* libpq.5.13.dylib in Frameworks */,
 				13672D4E22E02CA600C30B1E /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -78,6 +88,8 @@
 				13DFB2E7248BFE3C0093140F /* mongoose.c */,
 				13DFB2E8248BFE3C0093140F /* mongoose.h */,
 				13672D3822E02B7A00C30B1E /* AppDelegate.h */,
+				1335E8B52622CAD5004CEAE6 /* bencode.c */,
+				1335E8B82622CAF6004CEAE6 /* bencode.h */,
 				13672D3922E02B7A00C30B1E /* AppDelegate.m */,
 				13672D3B22E02B7A00C30B1E /* ViewController.h */,
 				13672D3C22E02B7A00C30B1E /* ViewController.m */,
@@ -88,6 +100,8 @@
 				13672D4622E02B7B00C30B1E /* Lab.entitlements */,
 				135305F1248D378300AA08EB /* DataConnection.h */,
 				135305F2248D378300AA08EB /* DataConnection.m */,
+				1335E8AA26221FFB004CEAE6 /* postgres.h */,
+				1335E8AB26221FFB004CEAE6 /* postgres.c */,
 			);
 			path = Lab;
 			sourceTree = "<group>";
@@ -95,6 +109,8 @@
 		13672D4C22E02CA600C30B1E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1335E8B026222119004CEAE6 /* libpq.5.13.dylib */,
+				1335E8A626221FAD004CEAE6 /* libpq.5.dylib */,
 				13672D4D22E02CA600C30B1E /* WebKit.framework */,
 			);
 			name = Frameworks;
@@ -177,7 +193,9 @@
 			files = (
 				13672D3D22E02B7A00C30B1E /* ViewController.m in Sources */,
 				13672D4522E02B7B00C30B1E /* main.m in Sources */,
+				1335E8B62622CAD5004CEAE6 /* bencode.c in Sources */,
 				135305F3248D378300AA08EB /* DataConnection.m in Sources */,
+				1335E8AC26221FFB004CEAE6 /* postgres.c in Sources */,
 				13D2AEF0248D5C91002FB2D8 /* MoveView.m in Sources */,
 				13DFB2E9248BFE3C0093140F /* mongoose.c in Sources */,
 				13672D3A22E02B7A00C30B1E /* AppDelegate.m in Sources */,
@@ -318,11 +336,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 972LM8CP43;
+				HEADER_SEARCH_PATHS = /usr/local/opt/libpq/include;
 				INFOPLIST_FILE = Lab/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/libpq/lib;
 				PRODUCT_BUNDLE_IDENTIFIER = fi.taiste.Lab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -338,11 +358,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 972LM8CP43;
 				GCC_OPTIMIZATION_LEVEL = 1;
+				HEADER_SEARCH_PATHS = /usr/local/opt/libpq/include;
 				INFOPLIST_FILE = Lab/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/libpq/lib;
 				PRODUCT_BUNDLE_IDENTIFIER = fi.taiste.Lab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
