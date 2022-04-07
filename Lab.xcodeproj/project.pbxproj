@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		130B897727FF5053001096BC /* libpq.5.14.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 130B897627FF5052001096BC /* libpq.5.14.dylib */; };
 		1335E8AC26221FFB004CEAE6 /* postgres.c in Sources */ = {isa = PBXBuildFile; fileRef = 1335E8AB26221FFB004CEAE6 /* postgres.c */; };
-		1335E8B126222119004CEAE6 /* libpq.5.13.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1335E8B026222119004CEAE6 /* libpq.5.13.dylib */; };
 		1335E8B62622CAD5004CEAE6 /* bencode.c in Sources */ = {isa = PBXBuildFile; fileRef = 1335E8B52622CAD5004CEAE6 /* bencode.c */; };
 		135305ED248C096100AA08EB /* public in Resources */ = {isa = PBXBuildFile; fileRef = 135305EC248C096100AA08EB /* public */; };
 		135305F3248D378300AA08EB /* DataConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 135305F2248D378300AA08EB /* DataConnection.m */; };
@@ -23,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		130B897627FF5052001096BC /* libpq.5.14.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpq.5.14.dylib; path = ../../../../../usr/local/Cellar/libpq/14.1/lib/libpq.5.14.dylib; sourceTree = "<group>"; };
 		1335E8A626221FAD004CEAE6 /* libpq.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpq.5.dylib; path = ../../../../../usr/local/lib/libpq.5.dylib; sourceTree = "<group>"; };
 		1335E8AA26221FFB004CEAE6 /* postgres.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = postgres.h; sourceTree = "<group>"; };
 		1335E8AB26221FFB004CEAE6 /* postgres.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = postgres.c; sourceTree = "<group>"; };
@@ -54,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1335E8B126222119004CEAE6 /* libpq.5.13.dylib in Frameworks */,
+				130B897727FF5053001096BC /* libpq.5.14.dylib in Frameworks */,
 				13672D4E22E02CA600C30B1E /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,6 +110,7 @@
 		13672D4C22E02CA600C30B1E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				130B897627FF5052001096BC /* libpq.5.14.dylib */,
 				1335E8B026222119004CEAE6 /* libpq.5.13.dylib */,
 				1335E8A626221FAD004CEAE6 /* libpq.5.dylib */,
 				13672D4D22E02CA600C30B1E /* WebKit.framework */,
@@ -342,7 +344,10 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/opt/libpq/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/opt/libpq/lib,
+					/usr/local/Cellar/libpq/14.1/lib,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = fi.taiste.Lab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -364,7 +369,11 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/opt/libpq/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/opt/libpq/lib,
+					/usr/local/Cellar/libpq/14.1/lib,
+				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = fi.taiste.Lab;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

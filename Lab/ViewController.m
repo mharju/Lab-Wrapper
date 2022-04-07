@@ -107,9 +107,9 @@ static void *start_server(void *nrepl) {
     
     // Set up HTTP server parameters
     mg_set_protocol_http_websocket(nc);
-/*    s_http_server_opts.document_root = [[NSString stringWithFormat:@"%@/public",
-                                          [[NSBundle mainBundle] resourcePath]] cStringUsingEncoding:NSUTF8StringEncoding];*/
-    s_http_server_opts.document_root = "/Users/maharj/Development/clojure/lab/resources/public";
+    s_http_server_opts.document_root = [[NSString stringWithFormat:@"%@/public",
+                                          [[NSBundle mainBundle] resourcePath]] cStringUsingEncoding:NSUTF8StringEncoding];
+    //s_http_server_opts.document_root = "/Users/maharj/Development/clojure/lab/resources/public";
 
     s_http_server_opts.enable_directory_listing = "yes";
 
